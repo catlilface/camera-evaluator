@@ -1,0 +1,32 @@
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "${FRONTEND_EXTERNAL_PORT}:3000"
+
+  backend:
+    build: ./backend
+    ports:
+      - "${BACKEND_EXTERNAL_PORT}:8080"
+
+  rabbitmq:
+    image: rabbitmq:4.2.4
+    ports:
+      - "${RABBITMQ_PORT_GRPC}:15672"
+      - "${RABBITMQ_PORT_REST}:5672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  postgres:
+    image: postgres:18.3-alpine
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file: .env
+
+volumes:
+  rabbitmq_data:
+    driver: local
+  postgres_data:
+    driver: local
