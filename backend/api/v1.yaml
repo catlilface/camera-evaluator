@@ -1,0 +1,88 @@
+openapi: 3.0.0
+info:
+  title: Photo Upload Service API
+  description: Сервис для загрузки фотографий и отправки в RabbitMQ
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local server
+
+paths:
+  /photos/upload:
+    post:
+      summary: Загрузка фотографии
+      description: |
+        Загружает фотографию и отправляет её в RabbitMQ для дальнейшей обработки.
+        Поддерживаются форматы: JPEG, PNG, GIF, WebP.
+        Максимальный размер: 10 MB.
+      operationId: uploadPhoto
+      tags:
+        - photos
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - photo
+              properties:
+                photo:
+                  type: string
+                  format: binary
+                  description: Файл фотографии
+      responses:
+        '202':
+          description: Фотография принята в обработку
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResponse'
+        '400':
+          description: Некорректный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: Файл слишком большой
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: Неподдерживаемый формат
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    UploadResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор фотографии
+      required:
+        - id
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
