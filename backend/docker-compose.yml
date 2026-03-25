@@ -1,18 +1,42 @@
-version: '3.8'
-
 services:
+  app:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    container_name: go-app
+    ports:
+      - "8080:8080"
+    environment:
+      - GIN_MODE=release
+      - ENV=production
+      - CONFIG_FILE=/app/configs/docker.yaml
+    depends_on:
+      rabbitmq:
+        condition: service_started
+    volumes:
+      - ./configs:/app/configs
+    restart: unless-stopped
+    networks:
+      - app-network
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
     ports:
-      - "5672:5672"   # AMQP protocol port
-      - "15672:15672" # Management UI port
+      - "5672:5672"
+      - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     restart: unless-stopped
+    networks:
+      - app-network
 
 volumes:
   rabbitmq_data:
+
+networks:
+  app-network:
+    driver: bridge

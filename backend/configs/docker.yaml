@@ -1,0 +1,8 @@
+service:
+  host: "0.0.0.0"
+  mainPort: "8080"
+  debugPort: "8081"
+
+queue:
+  rabbitMQURL: "amqp://guest:guest@rabbitmq:5672/"
+  queueName: "photos_queue"

@@ -3,6 +3,8 @@ package config
 import (
 	"fmt"
 	"github.com/spf13/viper"
+	"log"
+	"os"
 )
 
 type Cfg struct {
@@ -22,8 +24,9 @@ type RabbitMQ struct {
 }
 
 func (cfg *Cfg) Init() error {
-	viper.Set("config-file", "./configs/local.yaml")
-	viper.SetConfigFile(viper.GetString("config-file"))
+	confPath := os.Getenv("CONFIG_FILE")
+	log.Printf("Config path: %s", confPath)
+	viper.SetConfigFile(confPath)
 	if err := viper.ReadInConfig(); err != nil {
 		return fmt.Errorf("error to read file: %w", err)
 	}
