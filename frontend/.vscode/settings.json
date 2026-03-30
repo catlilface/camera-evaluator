@@ -1,0 +1,11 @@
+{
+  "files.watcherExclude": {
+    "**/.vscode/extensions/**": true
+  },
+  "search.exclude": {
+    "**/.vscode/extensions/**": true
+  },
+  "eslint.workingDirectories": [
+    { "mode": "auto" }
+  ]
+}

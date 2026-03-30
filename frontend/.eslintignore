@@ -1,0 +1,21 @@
+# Зависимости
+node_modules/
+
+# Сборка
+dist/
+build/
+out/
+
+# Покрытия тестов
+coverage/
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# Минифицированные файлы
+*.min.js
+
+tsconfig.app.json
+
+src/components/ui/
