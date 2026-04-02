@@ -1,26 +1,26 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
-import prettier from 'eslint-config-prettier'
-import { defineConfig, globalIgnores } from 'eslint/config'
+import js from "@eslint/js";
+import globals from "globals";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
+import tseslint from "typescript-eslint";
+import prettier from "eslint-config-prettier";
+import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
   globalIgnores([
-    'dist',
-    'build',
-    'node_modules',
-    'coverage',
-    '*.min.js',
-    '.next',
-    '.nuxt',
-    'out',
-    'public',
-    'src/components/ui',
+    "dist",
+    "build",
+    "node_modules",
+    "coverage",
+    "*.min.js",
+    ".next",
+    ".nuxt",
+    "out",
+    "public",
+    "src/components/ui",
   ]),
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ["**/*.{ts,tsx}"],
     extends: [
       prettier,
       js.configs.recommended,
@@ -33,4 +33,4 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
-])
+]);

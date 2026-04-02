@@ -5,7 +5,5 @@
   "search.exclude": {
     "**/.vscode/extensions/**": true
   },
-  "eslint.workingDirectories": [
-    { "mode": "auto" }
-  ]
+  "eslint.workingDirectories": [{ "mode": "auto" }]
 }

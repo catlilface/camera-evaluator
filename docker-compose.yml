@@ -1,55 +1,56 @@
 services:
-  # frontend:
-  #   build: ./frontend
-  #   ports:
-  #     - "${FRONTEND_EXTERNAL_PORT}:3000"
+    # frontend:
+    #   build: ./frontend
+    #   ports:
+    #     - "${FRONTEND_EXTERNAL_PORT}:3000"
 
-  # backend:
-  #   build: ./backend
-  #   ports:
-  #     - "${BACKEND_EXTERNAL_PORT}:8080"
-  #   depends_on:
-  #     rabbitmq:
-  #       condition: service_healthy
-  #     postgres:
-  #       condition: service_healthy
+    # backend:
+    #   build: ./backend
+    #   ports:
+    #     - "${BACKEND_EXTERNAL_PORT}:8080"
+    #   depends_on:
+    #     rabbitmq:
+    #       condition: service_healthy
+    #     postgres:
+    #       condition: service_healthy
 
-  evaluator:
-    build: ./evaluator
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
+    evaluator:
+        build: ./evaluator
+        depends_on:
+            rabbitmq:
+                condition: service_healthy
 
-  rabbitmq:
-    image: rabbitmq:4.2.4
-    ports:
-      - "${RABBITMQ_PORT_UI}:15672"
-      - "${RABBITMQ_PORT_AMQP}:5672"
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
-    healthcheck:
-      test: ["CMD", "rabbitmqctl", "status"]
-      interval: 1m30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
+    rabbitmq:
+        image: rabbitmq:4.2.4
+        ports:
+            - "${RABBITMQ_PORT_UI}:15672"
+            - "${RABBITMQ_PORT_AMQP}:5672"
+        volumes:
+            - rabbitmq_data:/var/lib/rabbitmq
+        healthcheck:
+            test: ["CMD", "rabbitmqctl", "status"]
+            interval: 1m30s
+            timeout: 30s
+            retries: 5
+            start_period: 30s
+        env_file: .env
 
-  postgres:
-    image: postgres:18.3-alpine
-    ports:
-      - "${POSTGRES_PORT}:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    env_file: .env
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+    postgres:
+        image: postgres:18.3-alpine
+        ports:
+            - "${POSTGRES_PORT}:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        env_file: .env
+        healthcheck:
+            test: ["CMD", "pg_isready", "-U", "postgres"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 30s
 
 volumes:
-  rabbitmq_data:
-    driver: local
-  postgres_data:
-    driver: local
+    rabbitmq_data:
+        driver: local
+    postgres_data:
+        driver: local
