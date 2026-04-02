@@ -9,9 +9,9 @@ COPY . ./
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o app ./cmd/main.go
 
-FROM debian:buster-slim
+FROM alpine:latest
 
-RUN addgroup --system appuser && adduser --system --group appuser --uid 1001
+RUN addgroup -g 1001 -S appuser && adduser -S appuser -u 1001
 
 USER appuser
 
@@ -19,4 +19,4 @@ WORKDIR /app
 
 COPY --from=builder /go/src/app/app .
 
-CMD ./app
+CMD ["./app"]
