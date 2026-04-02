@@ -18,8 +18,5 @@ USER appuser
 WORKDIR /app
 
 COPY --from=builder /go/src/app/app .
-COPY --from=builder /go/src/app/configs ./configs
 
-ENV CONFIG_PATH=./configs/docker.yaml
-
-CMD ./app --config-file "$CONFIG_PATH"
+CMD ./app
