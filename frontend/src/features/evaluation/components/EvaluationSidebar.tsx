@@ -1,13 +1,6 @@
 import { CheckCircle2 } from 'lucide-react'
 
-import { Badge } from '@/components/ui/Badge'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/Card'
+import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import { notes } from '@/features/evaluation/constants'
 import { type EvaluationMethod } from '@/features/evaluation/types'
 
@@ -49,9 +42,10 @@ export function EvaluationSidebar({
                 {activeMethod.description}
               </p>
             </div>
-            <Badge className="border-white/10 bg-white/10 text-white">
-              {activeMethod.subtitle}
-            </Badge>
+            <Badge
+              className="border-white/10 bg-white/10 text-white"
+              dangerouslySetInnerHTML={{ __html: activeMethod.subtitle }}
+            />
           </div>
         </div>
       </CardContent>

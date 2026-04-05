@@ -1,17 +1,19 @@
 import { type ChangeEvent } from 'react'
 
-import { Button } from '@/components/ui/Button'
 import {
+  Button,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/Card'
-import { FileSummaryCard } from '@/features/evaluation/components/FileSummaryCard'
-import { ImagePreviewCard } from '@/features/evaluation/components/ImagePreviewCard'
-import { ImageUploadField } from '@/features/evaluation/components/ImageUploadField'
-import { MethodSelector } from '@/features/evaluation/components/MethodSelector'
+} from '@/components/ui'
+import {
+  FileSummaryCard,
+  ImagePreviewCard,
+  ImageUploadField,
+  MethodSelector,
+} from '@/features/evaluation/components'
 import { type EvaluationMethodId } from '@/features/evaluation/types'
 
 type EvaluationFormProps = {
@@ -64,7 +66,7 @@ export function EvaluationForm({
           <Button type="button" variant="outline" size="lg" onClick={onReset}>
             Сбросить
           </Button>
-          <Button type="button" size="lg">
+          <Button type="button" size="lg" disabled={!selectedFile}>
             Оценить изображение
           </Button>
         </div>

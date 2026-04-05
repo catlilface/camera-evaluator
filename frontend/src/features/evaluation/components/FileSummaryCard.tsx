@@ -8,7 +8,7 @@ type FileSummaryCardProps = {
 
 export function FileSummaryCard({ file }: FileSummaryCardProps) {
   return (
-    <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-4">
+    <div className="flex h-full flex-col rounded-[28px] border border-slate-200 bg-slate-50 p-4">
       <div className="mb-3 flex items-center gap-2 text-sm font-medium text-slate-800">
         <FileImage className="h-4 w-4 text-sky-700" />
         Информация о файле
@@ -34,7 +34,7 @@ export function FileSummaryCard({ file }: FileSummaryCardProps) {
         </p>
       )}
 
-      <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+      <div className="mt-auto rounded-2xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
         <div className="flex gap-2">
           <Info className="mt-0.5 h-4 w-4 shrink-0" />
           <span>

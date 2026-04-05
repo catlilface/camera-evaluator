@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState, type ChangeEvent } from 'react'
 
+import {
+  EvaluationForm,
+  EvaluationHeader,
+  EvaluationSidebar,
+} from '@/features/evaluation/components'
 import { methods } from '@/features/evaluation/constants'
-import { EvaluationForm } from '@/features/evaluation/components/EvaluationForm'
-import { EvaluationHeader } from '@/features/evaluation/components/EvaluationHeader'
-import { EvaluationSidebar } from '@/features/evaluation/components/EvaluationSidebar'
 import { type EvaluationMethodId } from '@/features/evaluation/types'
 import {
   revokePreviewUrl,

@@ -1,11 +1,24 @@
 import { MAX_FILE_SIZE } from './constants'
 
-export function formatFileSize(size: number) {
-  if (size < 1024 * 1024) {
-    return `${(size / 1024).toFixed(1)} КБ`
+const BYTE_UNITS = ['Байт', 'Кб', 'Мб', 'Гб'] as const
+
+export function formatBytes(bytes: number, decimals = 2) {
+  if (bytes === 0) {
+    return `0 ${BYTE_UNITS[0]}`
   }
 
-  return `${(size / (1024 * 1024)).toFixed(2)} МБ`
+  const base = 1024
+  const index = Math.min(
+    Math.floor(Math.log(bytes) / Math.log(base)),
+    BYTE_UNITS.length - 1,
+  )
+  const size = bytes / base ** index
+
+  return `${size.toFixed(decimals)} ${BYTE_UNITS[index]}`
+}
+
+export function formatFileSize(size: number) {
+  return formatBytes(size)
 }
 
 export function validateImageFile(file: File) {
@@ -14,7 +27,7 @@ export function validateImageFile(file: File) {
   }
 
   if (file.size > MAX_FILE_SIZE) {
-    return 'Файл превышает ограничение 50 МБ. Выберите изображение меньше.'
+    return `Файл превышает ограничение ${formatBytes(MAX_FILE_SIZE)}. Выберите изображение меньше.`
   }
 
   return ''

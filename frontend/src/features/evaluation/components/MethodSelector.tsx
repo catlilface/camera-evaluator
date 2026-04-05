@@ -1,9 +1,7 @@
 import { CheckCircle2 } from 'lucide-react'
 
 import { methods } from '@/features/evaluation/constants'
-import {
-  type EvaluationMethodId,
-} from '@/features/evaluation/types'
+import { type EvaluationMethodId } from '@/features/evaluation/types'
 
 type MethodSelectorProps = {
   selectedMethod: EvaluationMethodId
@@ -37,7 +35,10 @@ export function MethodSelector({
                   <div className="text-lg font-semibold text-slate-950">
                     {method.title}
                   </div>
-                  <div className="text-sm text-sky-700">{method.subtitle}</div>
+                  <div
+                    className="text-sm text-sky-700"
+                    dangerouslySetInnerHTML={{ __html: method.subtitle }}
+                  />
                 </div>
                 {isActive ? (
                   <CheckCircle2 className="h-5 w-5 text-sky-700" />
