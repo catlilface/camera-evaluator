@@ -5,12 +5,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/oapi-codegen/runtime/types"
 	"net/http"
+	"photo-upload-service/internal/models"
 	api "photo-upload-service/internal/pkg/api/photo"
 	"photo-upload-service/internal/service/photo"
+	httpUtils "photo-upload-service/pkg/utils/http"
+	"strconv"
 )
 
 type photoService interface {
-	ProcessPhoto(ctx context.Context, file types.File) (*api.EvaluateSuccessResponse, error)
+	ProcessPhoto(ctx context.Context, data models.ProcessPhotoData) (*api.EvaluateSuccessResponse, error)
 }
 
 type UploadHandler struct {
@@ -24,25 +27,32 @@ func NewPhotoHandler(photoService *photo.Service) *UploadHandler {
 }
 
 func (h *UploadHandler) Evaluate(c *gin.Context) {
-	ctx := c.Request.Context()
-	var req api.EvaluateUploadRequest
-
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, api.ErrorResponse{
-			Error:  err.Error(),
-			Status: http.StatusText(http.StatusBadRequest),
-		})
-		return
-	}
-
-	res, err := h.photoService.ProcessPhoto(ctx, req.Image)
+	method := c.PostForm("method_id")
+	displayIDStr := c.PostForm("display_id")
+	displayID, err := strconv.Atoi(displayIDStr)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, api.ErrorResponse{
-			Error:  err.Error(),
-			Status: http.StatusText(http.StatusInternalServerError),
-		})
+		httpUtils.AbortWithStatus(c, http.StatusBadRequest, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, res)
+	fileHeader, err := c.FormFile("image")
+	if err != nil {
+		httpUtils.AbortWithStatus(c, http.StatusBadRequest, err)
+		return
+	}
+
+	var file types.File
+	file.InitFromMultipart(fileHeader)
+
+	res, err := h.photoService.ProcessPhoto(c.Request.Context(), models.ProcessPhotoData{
+		File:      file,
+		Method:    method,
+		DisplayID: displayID,
+	})
+	if err != nil {
+		httpUtils.AbortWithStatus(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	httpUtils.Success(c, res)
 }

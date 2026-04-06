@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"photo-upload-service/internal/config"
+	"photo-upload-service/internal/middleware"
 	"time"
 )
 
@@ -30,6 +31,9 @@ func New(cfg *config.Service) *Server {
 
 	mainRouter := gin.New()
 
+	mainRouter.Use(middleware.RequestIDMiddleware())
+	mainRouter.Use(gin.Recovery())
+
 	mainRouter.GET("/health", func(c *gin.Context) {
 		log.Println("Healthcheck request")
 		c.Status(http.StatusOK)
@@ -44,7 +48,7 @@ func New(cfg *config.Service) *Server {
 
 func newHTTPServer(cfg *config.Service, router *gin.Engine) *http.Server {
 	return &http.Server{
-		Addr:         cfg.Host,
+		Addr:         fmt.Sprintf("%s:%s", cfg.Host, cfg.MainPort),
 		Handler:      router,
 		ReadTimeout:  cfg.ReadTimeout,
 		WriteTimeout: cfg.WriteTimeout,
@@ -88,8 +92,4 @@ func (s *Server) Shutdown(ctx context.Context) error {
 
 func (s *Server) GetMainRouter() *gin.Engine {
 	return s.mainRouter
-}
-
-func buildLocalAddr(port string) string {
-	return fmt.Sprintf(":%s", port)
 }

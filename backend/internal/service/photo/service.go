@@ -7,6 +7,7 @@ import (
 	"github.com/oapi-codegen/runtime/types"
 	"os"
 	"path/filepath"
+	"photo-upload-service/internal/models"
 	photoApi "photo-upload-service/internal/pkg/api/photo"
 	"photo-upload-service/internal/rabbitmq"
 )
@@ -21,7 +22,7 @@ func NewPhotoService(queuePublisher *rabbitmq.Publisher) *Service {
 	}
 }
 
-func (s *Service) ProcessPhoto(ctx context.Context, file types.File) (*photoApi.EvaluateSuccessResponse, error) {
+func (s *Service) ProcessPhoto(ctx context.Context, data models.ProcessPhotoData) (*photoApi.EvaluateSuccessResponse, error) {
 	id := uuid.New()
 
 	projectRoot, err := os.Getwd()
@@ -30,13 +31,13 @@ func (s *Service) ProcessPhoto(ctx context.Context, file types.File) (*photoApi.
 	}
 
 	photosDir := filepath.Join(projectRoot, "..", "photosInProcess") //TODO: путь из конфига?
-	filePath := filepath.Join(photosDir, id.String())
+	filePath := filepath.Join(photosDir, id.String()+".png")
 
 	if err := os.MkdirAll(photosDir, 0755); err != nil {
 		return nil, fmt.Errorf("service: failed to create directory: %w", err)
 	}
 
-	err = saveFile(filePath, file)
+	err = saveFile(filePath, data.File)
 	if err != nil {
 		return nil, fmt.Errorf("service: failed to save file: %w", err)
 	}
