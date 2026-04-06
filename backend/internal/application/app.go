@@ -77,6 +77,10 @@ func (a *App) signalHandler(ctx context.Context) {
 	sig := <-ch
 	log.Printf("os signal received: %s", sig)
 
+	if err := a.srv.Shutdown(ctx, a.cfg.Service.ShutdownTimeout); err != nil {
+		log.Printf("error server shutdown: %s", err)
+	}
+
 	if err := a.Shutdown(ctx); err != nil {
 		log.Printf("error app shutdown: %s", err)
 	}

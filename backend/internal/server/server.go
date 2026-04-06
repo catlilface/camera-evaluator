@@ -12,14 +12,6 @@ import (
 	"time"
 )
 
-const (
-	readTimeout  = 10 * time.Second
-	writeTimeout = 10 * time.Second
-	idleTimeout  = 15 * time.Second
-
-	shutdownTimeout = 3 * time.Second
-)
-
 type Server struct {
 	mainRouter  *gin.Engine
 	mainHTTPSrv *http.Server
@@ -60,10 +52,10 @@ func (s *Server) Run(ctx context.Context) error {
 	g, ctx := errgroup.WithContext(context.Background())
 
 	g.Go(func() error {
+		log.Printf("main server start and listen: %s", s.mainPort)
 		if err := s.mainHTTPSrv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			return fmt.Errorf("error to start main server: %s", err)
 		}
-		log.Printf("main server start and listen: %s", s.mainPort)
 
 		return nil
 	})
@@ -71,9 +63,9 @@ func (s *Server) Run(ctx context.Context) error {
 	return g.Wait()
 }
 
-func (s *Server) Shutdown(ctx context.Context) error {
+func (s *Server) Shutdown(ctx context.Context, timeout time.Duration) error {
 	//время на завершение запросов
-	ctx, cancel := context.WithTimeout(ctx, shutdownTimeout)
+	ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 
 	g, ctx := errgroup.WithContext(ctx)
