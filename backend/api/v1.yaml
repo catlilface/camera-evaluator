@@ -55,7 +55,6 @@ components:
       type: object
       required:
         - method_id
-        - display_id
         - image
       properties:
         method_id:
