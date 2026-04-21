@@ -3,21 +3,22 @@ package photo
 import (
 	"context"
 	"fmt"
-	"github.com/google/uuid"
-	"github.com/oapi-codegen/runtime/types"
 	"os"
 	"path/filepath"
 	"photo-upload-service/internal/models"
 	photoApi "photo-upload-service/internal/pkg/api/photo"
-	"photo-upload-service/internal/rabbitmq"
+	"photo-upload-service/internal/rabbitmq/producer"
 	"strings"
+
+	"github.com/google/uuid"
+	"github.com/oapi-codegen/runtime/types"
 )
 
 type Service struct {
-	queuePublisher *rabbitmq.Publisher
+	queuePublisher *producer.Publisher
 }
 
-func NewPhotoService(queuePublisher *rabbitmq.Publisher) *Service {
+func NewPhotoService(queuePublisher *producer.Publisher) *Service {
 	return &Service{
 		queuePublisher: queuePublisher,
 	}

@@ -1,13 +1,14 @@
-package rabbitmq
+package producer
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/google/uuid"
-	amqp "github.com/rabbitmq/amqp091-go"
 	"photo-upload-service/internal/models"
 	"time"
+
+	"github.com/google/uuid"
+	amqp "github.com/rabbitmq/amqp091-go"
 )
 
 func (p *Publisher) PublishPhoto(ctx context.Context, id uuid.UUID, ext string) error {

@@ -25,7 +25,12 @@ type EvaluationMessage struct {
 }
 
 type ProcessPhotoData struct {
-	File      types.File
-	Method    string
-	DisplayID int
+	File   types.File
+	Method string
+}
+
+type EvaluationResponseMessage struct {
+	ImageID string      `json:"image_id"`
+	Status  string      `json:"status"`
+	Data    interface{} `json:"data"`
 }

@@ -1,0 +1,22 @@
+### HEALTH CHECK
+GET http://localhost:8080/health
+Content-Type: application/json
+
+### UPLOAD IMAGE
+POST http://localhost:8080/api/v1/evaluate
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="method_id"
+
+456
+
+--boundary
+Content-Disposition: form-data; name="image"; filename="image.png"
+Content-Type: image/jpeg
+
+< ./image.png
+--boundary--
+
+### WEBSOCKET
+# wscat -c ws://localhost:8080/api/v1/ws?channel_id={{$uuid}}

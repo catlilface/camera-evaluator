@@ -1,9 +1,10 @@
-package rabbitmq
+package producer
 
 import (
-	amqp "github.com/rabbitmq/amqp091-go"
 	"photo-upload-service/internal/config"
 	"time"
+
+	amqp "github.com/rabbitmq/amqp091-go"
 )
 
 type Publisher struct {

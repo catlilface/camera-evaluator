@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Photo Upload Service API
-  description: Сервис для загрузки фотографий и отправки в RabbitMQ
+  description: Сервис для загрузки фотографий и отправки в обработчик
   version: 1.0.0
 
 servers:
@@ -10,7 +10,7 @@ servers:
 
 paths:
   /health:
-    post:
+    get:
       summary: Проверка работоспособности
       description: Проверка работоспособности
       operationId: Health
@@ -61,11 +61,6 @@ components:
           type: integer
           description: ID метода
           example: 123
-          minimum: 1
-        display_id:
-          type: integer
-          description: ID дисплея
-          example: 456
           minimum: 1
         image:
           type: string
