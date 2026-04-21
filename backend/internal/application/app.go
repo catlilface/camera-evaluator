@@ -7,10 +7,14 @@ import (
 	"os/signal"
 	"photo-upload-service/internal/config"
 	photoHandler "photo-upload-service/internal/handlers/photo"
+	ws "photo-upload-service/internal/handlers/websocket"
 	api "photo-upload-service/internal/pkg/api/photo"
-	"photo-upload-service/internal/rabbitmq"
+	websocket2 "photo-upload-service/internal/pkg/api/ws"
+	"photo-upload-service/internal/rabbitmq/consumer"
+	"photo-upload-service/internal/rabbitmq/producer"
 	"photo-upload-service/internal/server"
 	photoSrv "photo-upload-service/internal/service/photo"
+	"photo-upload-service/pkg/websocket"
 	"syscall"
 )
 
@@ -39,18 +43,28 @@ func (a *App) Run(ctx context.Context) error {
 	//graceful shutdown
 	go a.signalHandler(ctx)
 
+	//websocket
+	wsManager := websocket.NewManager()
+
 	//queue
-	rabbit, err := rabbitmq.NewPublisher(a.cfg)
+	rabbitPublisher, err := producer.NewPublisher(a.cfg)
 	if err != nil {
 		return err
 	}
-	a.AddCloser(rabbit.Close)
+	a.AddCloser(rabbitPublisher.Close)
+
+	rabbitConsumer, err := consumer.NewConsumer(ctx, a.cfg, wsManager)
+	if err != nil {
+		return err
+	}
+	a.AddCloser(rabbitConsumer.Stop)
 
 	//services
-	photoService := photoSrv.NewPhotoService(rabbit)
+	photoService := photoSrv.NewPhotoService(rabbitPublisher)
 
 	//handlers
 	photoConnector := photoHandler.NewPhotoHandler(photoService)
+	wsConnector := ws.NewWSHandler(wsManager)
 
 	//http server
 	a.srv = server.New(
@@ -58,6 +72,7 @@ func (a *App) Run(ctx context.Context) error {
 	)
 
 	api.RegisterHandlers(a.srv.GetMainRouter(), photoConnector)
+	websocket2.RegisterHandlers(a.srv.GetMainRouter(), wsConnector)
 
 	return a.srv.Run(ctx)
 }

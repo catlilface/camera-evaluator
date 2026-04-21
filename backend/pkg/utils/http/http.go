@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"net/http"
 	api "photo-upload-service/internal/pkg/api/photo"
 	"reflect"
@@ -27,7 +26,7 @@ func Success(c *gin.Context, res interface{}) {
 }
 
 func AbortWithStatus(c *gin.Context, statusCode int, err error) {
-	_ = c.Error(fmt.Errorf("failed to get image file: %w", err))
+	_ = c.Error(err)
 	c.AbortWithStatusJSON(statusCode, api.ErrorResponse{
 		Error:  err.Error(),
 		Status: http.StatusText(statusCode),

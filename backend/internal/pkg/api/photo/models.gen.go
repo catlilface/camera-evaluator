@@ -21,9 +21,6 @@ type EvaluateSuccessResponse struct {
 
 // EvaluateUploadRequest defines model for EvaluateUploadRequest.
 type EvaluateUploadRequest struct {
-	// DisplayID ID дисплея
-	DisplayID *int `json:"display_id,omitempty"`
-
 	// Image Файл изображения (JPEG, PNG, GIF)
 	Image openapi_types.File `json:"image"`
 

@@ -1,0 +1,7 @@
+package: websocket
+output: internal/pkg/api/ws/models.gen.go
+generate:
+  models: true
+output-options:
+  skip-prune: true
+  name-normalizer: ToCamelCaseWithInitialisms

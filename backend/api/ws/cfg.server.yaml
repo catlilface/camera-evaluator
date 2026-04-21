@@ -1,0 +1,8 @@
+package: websocket
+output: internal/pkg/api/ws/server.gen.go
+generate:
+  gin-server: true
+  embedded-spec: true
+output-options:
+  skip-prune: true
+  name-normalizer: ToCamelCaseWithInitialisms

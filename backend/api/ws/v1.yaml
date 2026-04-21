@@ -1,0 +1,46 @@
+openapi: 3.0.0
+info:
+  title: Photo Upload Service API
+  description: API для установки ws подключения
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local server
+
+paths:
+  /ws:
+    get:
+      summary: WebSocket подключение
+      description: Устанавливает WebSocket соединение для получения результатов обработки фото.
+      operationId: connectWebSocket
+      parameters:
+        - name: channel_id
+          in: query
+          required: true
+          description: Уникальный ID канала (UUID), используемый для связи HTTP запроса и WebSocket
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '101':
+          description: Switching Protocols (WebSocket установлен)
+        '400':
+          description: Неверный запрос (например, отсутствует channel_id)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+        - status
+        - error
+      properties:
+        status:
+          type: string
+        error:
+          type: string
