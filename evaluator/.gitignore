@@ -1,3 +1,8 @@
 __pycache__
 *cache*
 .venv
+
+.model/*
+!.model/.gitkeep
+.images/*
+!.images/.gitkeep
