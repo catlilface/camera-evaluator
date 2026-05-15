@@ -5,7 +5,7 @@ from loguru import logger
 from src.models import ProcessingQueueItem
 from src.settings import settings
 
-broker = RabbitBroker()
+broker = RabbitBroker(settings.rabbitmq_url)
 app = FastStream(broker)
 
 

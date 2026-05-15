@@ -1,17 +1,4 @@
 services:
-  # frontend:
-  #   build: ./frontend
-  #   ports:
-  #     - "${FRONTEND_EXTERNAL_PORT}:3000"
-
-  # evaluator:
-  #   build:
-  #     context: ./evaluator
-  #     dockerfile: .
-  #   depends_on:
-  #     rabbitmq:
-  #       condition: service_healthy
-
   rabbitmq:
     image: rabbitmq:4.2.4
     ports:
@@ -21,10 +8,10 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq
     healthcheck:
       test: ["CMD", "rabbitmqctl", "status"]
-      interval: 1m30s
-      timeout: 30s
+      interval: 5s
+      timeout: 5s
       retries: 5
-      start_period: 30s
+      start_period: 3s
     env_file: .env
 
   postgres:
@@ -36,10 +23,19 @@ services:
     env_file: .env
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 5
-      start_period: 30s
+      start_period: 3s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "${FRONTEND_EXTERNAL_PORT}:80"
+    env_file: .env
 
   backend:
     build:
@@ -48,13 +44,24 @@ services:
     container_name: backend
     ports:
       - "8080:8080"
-    env_file:
-      - .env
+    env_file: .env
     environment:
       - GIN_MODE=release
     depends_on:
-      - rabbitmq
-      - postgres
+      rabbitmq:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  evaluator:
+    build:
+      context: ./evaluator
+      dockerfile: Dockerfile
+    container_name: evaluator
+    env_file: .env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 
 volumes:
   rabbitmq_data:

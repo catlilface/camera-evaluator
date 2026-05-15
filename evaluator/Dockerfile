@@ -2,9 +2,10 @@ FROM ghcr.io/astral-sh/uv:python3.13-alpine
 
 WORKDIR /app
 
-COPY ./pyproject.toml ./uv.lock ./main.py /app/
-COPY ./src /app/src
+COPY ./pyproject.toml ./uv.lock ./.env /app/
 
 RUN uv sync --no-dev
 
-CMD ["uv", "run", "main.py"]
+COPY ./src/ /app/src/
+
+CMD ["uv", "run", "--no-sync", "faststream", "run", "src.broker.app:app"]
