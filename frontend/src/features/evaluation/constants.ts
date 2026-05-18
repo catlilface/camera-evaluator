@@ -15,19 +15,26 @@ export const MAX_FILE_SIZE = getMaxFileSize()
 export const methods = [
   {
     id: 'rr',
+    apiId: 456,
     title: 'RR',
     subtitle: 'Reference&#8209;based',
-    description:
-      'Метод с эталонным изображением для последующего сравнения.',
+    description: 'Метод с эталонным изображением для последующего сравнения.',
   },
   {
     id: 'nr',
+    apiId: 457,
     title: 'NR',
     subtitle: 'No&#8209;reference',
     description:
       'Метод без эталона, когда оценка строится только по загруженной картинке.',
   },
 ] as const
+
+export function getMethodApiId(methodId: (typeof methods)[number]['id']) {
+  return (
+    methods.find((method) => method.id === methodId)?.apiId ?? methods[0].apiId
+  )
+}
 
 export const notes = [
   'Сейчас доступны только методы RR и NR.',

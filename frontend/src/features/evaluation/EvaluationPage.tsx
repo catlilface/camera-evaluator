@@ -5,8 +5,12 @@ import {
   EvaluationHeader,
   EvaluationSidebar,
 } from '@/features/evaluation/components'
+import { evaluateImage } from '@/features/evaluation/api'
 import { methods } from '@/features/evaluation/constants'
-import { type EvaluationMethodId } from '@/features/evaluation/types'
+import {
+  type EvaluateResponse,
+  type EvaluationMethodId,
+} from '@/features/evaluation/types'
 import {
   revokePreviewUrl,
   validateImageFile,
@@ -17,6 +21,9 @@ export function EvaluationPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [error, setError] = useState('')
+  const [apiError, setApiError] = useState('')
+  const [apiResponse, setApiResponse] = useState<EvaluateResponse | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [inputKey, setInputKey] = useState(0)
 
   const activeMethod = useMemo(
@@ -38,6 +45,8 @@ export function EvaluationPage() {
       setSelectedFile(null)
       setPreviewUrl(null)
       setError('')
+      setApiError('')
+      setApiResponse(null)
       return
     }
 
@@ -48,6 +57,8 @@ export function EvaluationPage() {
       setSelectedFile(null)
       setPreviewUrl(null)
       setError(validationError)
+      setApiError('')
+      setApiResponse(null)
       event.target.value = ''
       return
     }
@@ -56,6 +67,31 @@ export function EvaluationPage() {
     setSelectedFile(file)
     setPreviewUrl(URL.createObjectURL(file))
     setError('')
+    setApiError('')
+    setApiResponse(null)
+  }
+
+  async function handleSubmit() {
+    if (!selectedFile || isSubmitting) {
+      return
+    }
+
+    setIsSubmitting(true)
+    setApiError('')
+    setApiResponse(null)
+
+    try {
+      const response = await evaluateImage(selectedFile, selectedMethod)
+      setApiResponse(response)
+    } catch (error) {
+      setApiError(
+        error instanceof Error
+          ? error.message
+          : 'Не удалось отправить изображение',
+      )
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   function handleReset() {
@@ -64,6 +100,9 @@ export function EvaluationPage() {
     setSelectedFile(null)
     setPreviewUrl(null)
     setError('')
+    setApiError('')
+    setApiResponse(null)
+    setIsSubmitting(false)
     setInputKey((current) => current + 1)
   }
 
@@ -75,14 +114,18 @@ export function EvaluationPage() {
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
           <EvaluationSidebar activeMethod={activeMethod} />
           <EvaluationForm
+            apiError={apiError}
+            apiResponse={apiResponse}
             error={error}
             inputKey={inputKey}
+            isSubmitting={isSubmitting}
             previewUrl={previewUrl}
             selectedFile={selectedFile}
             selectedMethod={selectedMethod}
             onFileChange={handleFileChange}
             onMethodChange={setSelectedMethod}
             onReset={handleReset}
+            onSubmit={handleSubmit}
           />
         </div>
       </section>

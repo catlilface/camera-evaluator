@@ -1,5 +1,6 @@
 export { EvaluationForm } from './EvaluationForm'
 export { EvaluationHeader } from './EvaluationHeader'
+export { EvaluationResultCard } from './EvaluationResultCard'
 export { EvaluationSidebar } from './EvaluationSidebar'
 export { FileSummaryCard } from './FileSummaryCard'
 export { ImagePreviewCard } from './ImagePreviewCard'
