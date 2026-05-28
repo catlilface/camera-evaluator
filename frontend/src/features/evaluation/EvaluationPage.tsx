@@ -3,18 +3,26 @@ import { useEffect, useMemo, useState, type ChangeEvent } from 'react'
 import {
   EvaluationForm,
   EvaluationHeader,
+  EvaluationResultCard,
   EvaluationSidebar,
 } from '@/features/evaluation/components'
 import { evaluateImage } from '@/features/evaluation/api'
 import { methods } from '@/features/evaluation/constants'
+<<<<<<< Updated upstream
 import {
   type EvaluateResponse,
   type EvaluationMethodId,
 } from '@/features/evaluation/types'
+=======
+import { type EvaluationMethodId, type EvaluationResult, type WsResultMessage } from '@/features/evaluation/types'
+>>>>>>> Stashed changes
 import {
+  buildWsUrl,
   revokePreviewUrl,
   validateImageFile,
 } from '@/features/evaluation/utils'
+
+type Phase = 'idle' | 'loading' | 'result' | 'error'
 
 export function EvaluationPage() {
   const [selectedMethod, setSelectedMethod] = useState<EvaluationMethodId>('rr')
@@ -25,6 +33,10 @@ export function EvaluationPage() {
   const [apiResponse, setApiResponse] = useState<EvaluateResponse | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [inputKey, setInputKey] = useState(0)
+
+  const [phase, setPhase] = useState<Phase>('idle')
+  const [result, setResult] = useState<EvaluationResult | null>(null)
+  const [submissionError, setSubmissionError] = useState('')
 
   const activeMethod = useMemo(
     () => methods.find((method) => method.id === selectedMethod) ?? methods[0],
@@ -104,6 +116,70 @@ export function EvaluationPage() {
     setApiResponse(null)
     setIsSubmitting(false)
     setInputKey((current) => current + 1)
+    setPhase('idle')
+    setResult(null)
+    setSubmissionError('')
+  }
+
+  function handleEvaluate() {
+    if (!selectedFile || !previewUrl) return
+
+    setPhase('loading')
+    setSubmissionError('')
+
+    const channelId = crypto.randomUUID()
+    const capturedImageUrl = previewUrl
+    const ws = new WebSocket(buildWsUrl(channelId))
+    let received = false
+
+    ws.onopen = async () => {
+      try {
+        const formData = new FormData()
+        formData.append('method_id', String(activeMethod.apiId))
+        formData.append('channel_id', channelId)
+        formData.append('image', selectedFile!)
+
+        const resp = await fetch('/api/v1/evaluate', { method: 'POST', body: formData })
+        if (!resp.ok) {
+          const body = await resp.json().catch(() => ({})) as Record<string, string>
+          throw new Error(body['error'] ?? `HTTP ${resp.status}`)
+        }
+      } catch (err) {
+        ws.close()
+        setSubmissionError(err instanceof Error ? err.message : 'Ошибка загрузки')
+        setPhase('error')
+      }
+    }
+
+    ws.onmessage = (event: MessageEvent<string>) => {
+      received = true
+      try {
+        const msg = JSON.parse(event.data) as WsResultMessage
+        setResult({
+          imageUrl: capturedImageUrl,
+          score: typeof msg.score === 'number' ? msg.score : null,
+          status: msg.status ?? 'ok',
+        })
+        setPhase('result')
+      } catch {
+        setSubmissionError('Не удалось разобрать ответ сервера')
+        setPhase('error')
+      }
+    }
+
+    ws.onerror = () => {
+      if (!received) {
+        setSubmissionError('Ошибка WebSocket соединения')
+        setPhase('error')
+      }
+    }
+
+    ws.onclose = () => {
+      if (!received) {
+        setSubmissionError('Соединение прервано без результата')
+        setPhase('error')
+      }
+    }
   }
 
   return (
@@ -113,6 +189,7 @@ export function EvaluationPage() {
 
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
           <EvaluationSidebar activeMethod={activeMethod} />
+<<<<<<< Updated upstream
           <EvaluationForm
             apiError={apiError}
             apiResponse={apiResponse}
@@ -127,6 +204,30 @@ export function EvaluationPage() {
             onReset={handleReset}
             onSubmit={handleSubmit}
           />
+=======
+          {phase === 'result' && result ? (
+            <EvaluationResultCard
+              imageUrl={result.imageUrl}
+              score={result.score}
+              status={result.status}
+              onReset={handleReset}
+            />
+          ) : (
+            <EvaluationForm
+              error={error}
+              inputKey={inputKey}
+              isLoading={phase === 'loading'}
+              previewUrl={previewUrl}
+              selectedFile={selectedFile}
+              selectedMethod={selectedMethod}
+              submissionError={submissionError}
+              onFileChange={handleFileChange}
+              onMethodChange={setSelectedMethod}
+              onReset={handleReset}
+              onSubmit={handleEvaluate}
+            />
+          )}
+>>>>>>> Stashed changes
         </div>
       </section>
     </main>

@@ -38,3 +38,22 @@ export function revokePreviewUrl(url: string | null) {
     URL.revokeObjectURL(url)
   }
 }
+
+export function buildWsUrl(channelId: string): string {
+  const apiBase = import.meta.env.VITE_API_BASE_URL
+  if (apiBase) {
+    const wsBase = apiBase.replace(/^https/, 'wss').replace(/^http/, 'ws')
+    return `${wsBase}/api/v1/ws?channel_id=${channelId}`
+  }
+  const proto = window.location.protocol === 'https:' ? 'wss' : 'ws'
+  return `${proto}://${window.location.host}/api/v1/ws?channel_id=${channelId}`
+}
+
+export function extractScore(data: Record<string, unknown> | number | null): number | null {
+  if (typeof data === 'number') return data
+  if (data !== null && typeof data === 'object') {
+    const s = data['score'] ?? data['Score']
+    if (typeof s === 'number') return s
+  }
+  return null
+}

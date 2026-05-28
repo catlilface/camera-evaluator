@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { AlertCircle, CheckCircle2, Clock3 } from 'lucide-react'
 
 import type { EvaluateResponse } from '@/features/evaluation/types'
@@ -65,5 +66,64 @@ export function EvaluationResultCard({
         {JSON.stringify(response, null, 2)}
       </pre>
     </div>
+=======
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui'
+import { type EvaluationResult } from '@/features/evaluation/types'
+
+type EvaluationResultCardProps = EvaluationResult & {
+  onReset: () => void
+}
+
+export function EvaluationResultCard({
+  imageUrl,
+  score,
+  status,
+  onReset,
+}: EvaluationResultCardProps) {
+  const displayScore = score !== null ? Math.round(score * 10) / 10 : null
+
+  return (
+    <Card className="border-white/70 bg-white/90">
+      <CardHeader>
+        <CardTitle>Результат оценки</CardTitle>
+        <CardDescription>Статус: {status || 'завершено'}</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+          <img
+            src={imageUrl}
+            alt="Загруженное изображение"
+            className="mx-auto max-h-64 w-full object-contain"
+          />
+        </div>
+
+        <div className="flex items-center justify-center rounded-xl border border-blue-200 bg-blue-50 p-6">
+          {displayScore !== null ? (
+            <div className="text-center">
+              <div className="text-5xl font-bold tabular-nums text-blue-700">
+                {displayScore}
+              </div>
+              <div className="mt-1 text-sm text-blue-500">из 100</div>
+            </div>
+          ) : (
+            <p className="text-sm text-slate-500">Оценка недоступна</p>
+          )}
+        </div>
+
+        <div className="flex justify-end">
+          <Button type="button" variant="outline" size="lg" onClick={onReset}>
+            Новая оценка
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+>>>>>>> Stashed changes
   )
 }
