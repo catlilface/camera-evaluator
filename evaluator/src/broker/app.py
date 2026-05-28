@@ -1,5 +1,5 @@
 from faststream import FastStream
-from faststream.rabbit import RabbitBroker
+from faststream.rabbit import RabbitBroker, RabbitQueue
 from loguru import logger
 
 from src.models import ProcessingQueueItem
@@ -9,8 +9,8 @@ broker = RabbitBroker(settings.rabbitmq_url)
 app = FastStream(broker)
 
 
-@broker.subscriber(settings.rabbitmq_processing_queue)
+@broker.subscriber(RabbitQueue(settings.rabbitmq_processing_queue, durable=True))
 async def handle(message: ProcessingQueueItem):
-    logger.success("Got a message from processing queue: {msg}!")
+    logger.success(f"Got a message from processing queue: {message}!")
 
-    await broker.publish(message, settings.rabbitmq_done_queue)
+    await broker.publish(message, RabbitQueue(settings.rabbitmq_done_queue, durable=True))

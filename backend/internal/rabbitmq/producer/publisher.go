@@ -7,11 +7,10 @@ import (
 	"photo-upload-service/internal/models"
 	"time"
 
-	"github.com/google/uuid"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-func (p *Publisher) PublishPhoto(ctx context.Context, id uuid.UUID, ext string) error {
+func (p *Publisher) PublishPhoto(ctx context.Context, id string, imagePath string) error {
 	select {
 	case <-ctx.Done():
 		return ctx.Err()
@@ -19,9 +18,8 @@ func (p *Publisher) PublishPhoto(ctx context.Context, id uuid.UUID, ext string) 
 	}
 
 	message := models.EvaluationMessage{
-		PhotoID: id,
-		Method:  "Mock method",
-		Ext:     ext,
+		ID:        id,
+		ImagePath: imagePath,
 	}
 
 	jsonData, err := json.Marshal(message)
@@ -49,7 +47,7 @@ func (p *Publisher) PublishPhoto(ctx context.Context, id uuid.UUID, ext string) 
 			ContentType:  "application/json",
 			Body:         jsonData,
 			DeliveryMode: amqp.Persistent,
-			MessageId:    id.String(),
+			MessageId:    id,
 			Timestamp:    time.Now(),
 		},
 	)
