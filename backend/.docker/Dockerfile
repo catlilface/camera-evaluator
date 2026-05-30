@@ -13,10 +13,12 @@ FROM alpine:latest
 
 RUN addgroup -g 1001 -S appuser && adduser -S appuser -u 1001
 
-USER appuser
-
 WORKDIR /app
 
 COPY --from=builder /go/src/app/app .
+
+RUN mkdir -p /app/.photos && chown -R appuser:appuser /app/.photos
+
+USER appuser
 
 CMD ["./app"]

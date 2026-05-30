@@ -110,11 +110,11 @@ func (c *Consumer) handleMessage(body []byte) {
 		return
 	}
 
-	if message.ImageID == "" {
+	if message.ID == "" {
 		log.Println("[Consumer] empty channel_id")
 		return
 	}
 
-	c.wsManager.Send(message.ImageID, message)
-	c.wsManager.CloseChannel(message.ImageID)
+	c.wsManager.Send(message.ID, message)
+	c.wsManager.CloseChannel(message.ID)
 }

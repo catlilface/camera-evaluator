@@ -60,7 +60,7 @@ func (a *App) Run(ctx context.Context) error {
 	a.AddCloser(rabbitConsumer.Stop)
 
 	//services
-	photoService := photoSrv.NewPhotoService(rabbitPublisher)
+	photoService := photoSrv.NewPhotoService(rabbitPublisher, a.cfg.Service.PhotosDir)
 
 	//handlers
 	photoConnector := photoHandler.NewPhotoHandler(photoService)
@@ -72,7 +72,9 @@ func (a *App) Run(ctx context.Context) error {
 	)
 
 	api.RegisterHandlers(a.srv.GetMainRouter(), photoConnector)
-	websocket2.RegisterHandlers(a.srv.GetMainRouter(), wsConnector)
+	websocket2.RegisterHandlersWithOptions(a.srv.GetMainRouter(), wsConnector, websocket2.GinServerOptions{
+		BaseURL: "/api/v1",
+	})
 
 	return a.srv.Run(ctx)
 }

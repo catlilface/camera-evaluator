@@ -28,6 +28,7 @@ func NewPhotoHandler(photoService *photo.Service) *UploadHandler {
 
 func (h *UploadHandler) Evaluate(c *gin.Context) {
 	method := c.PostForm("method_id")
+	channelID := c.PostForm("channel_id")
 
 	fileHeader, err := c.FormFile("image")
 	if err != nil {
@@ -39,8 +40,9 @@ func (h *UploadHandler) Evaluate(c *gin.Context) {
 	file.InitFromMultipart(fileHeader)
 
 	res, err := h.photoService.ProcessPhoto(c.Request.Context(), models.ProcessPhotoData{
-		File:   file,
-		Method: method,
+		File:      file,
+		Method:    method,
+		ChannelID: channelID,
 	})
 	if err != nil {
 		httpUtils.AbortWithStatus(c, http.StatusInternalServerError, err)
