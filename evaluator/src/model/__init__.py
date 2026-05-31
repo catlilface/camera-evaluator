@@ -1,3 +1,3 @@
-from .musiq import MUSIQ
+from .musiq import MusiqInference
 
-__all__ = ["MUSIQ"]
+__all__ = ["MusiqInference"]
