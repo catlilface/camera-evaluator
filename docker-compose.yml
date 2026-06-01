@@ -1,6 +1,6 @@
 services:
   rabbitmq:
-    image: rabbitmq:4.2.4
+    image: rabbitmq:4-management
     ports:
       - "${RABBITMQ_PORT_UI}:15672"
       - "${RABBITMQ_PORT_AMQP}:5672"
@@ -22,7 +22,8 @@ services:
       - postgres_data:/var/lib/postgresql
     env_file: .env
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+      test:
+        ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -54,6 +55,8 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
+    volumes:
+      - image_data:/app/.photos/
 
   evaluator:
     build:
@@ -64,9 +67,16 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+    volumes:
+      - image_data:/app/.photos/
+      - torch_hub:/root/.cache/torch/hub/
 
 volumes:
   rabbitmq_data:
     driver: local
   postgres_data:
+    driver: local
+  image_data:
+    driver: local
+  torch_hub:
     driver: local

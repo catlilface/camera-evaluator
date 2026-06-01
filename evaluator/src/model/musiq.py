@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import os
 import pathlib
 from dataclasses import dataclass
@@ -33,7 +31,7 @@ class MusiqInference:
     def __init__(
         self,
         model_name: str = "koniq",
-        device: Optional[str] = None,
+        device: str | None = None,
         warmup: bool = True,
     ) -> None:
         self.model_name = model_name.lower()
@@ -51,21 +49,12 @@ class MusiqInference:
     def evaluate(
         self,
         image: Union[PathLike, bytes, bytearray, Image.Image, np.ndarray],
-        source: Optional[str] = None,
-        return_raw: bool = False,
-    ) -> Union[float, MusiqResult]:
+        source: str | None = None,
+    ) -> float:
         image_tensor = self._to_tensor(image)
         score = self.metric(image_tensor).item()
 
-        if not return_raw:
-            return score
-
-        return MusiqResult(
-            score=score,
-            model_name=self.model_name,
-            source=source,
-            raw_output={"score": score},
-        )
+        return score
 
     def evaluate_file(
         self,
@@ -154,11 +143,7 @@ class MusiqInference:
                 pil = pil.convert("RGB")
             return self._pil_to_tensor(pil)
 
-        raise TypeError(f"Unsupported image type: {type(image)!r}")
-
     def _load_image_tensor(self, path: str) -> torch.Tensor:
-        from torchvision import transforms
-
         img = Image.open(path).convert("RGB")
         return self._pil_to_tensor(img)
 
