@@ -32,7 +32,7 @@ export function EvaluationPage() {
   const [_apiResponse, setApiResponse] = useState<EvaluateResponse | null>(
     null,
   );
-  const [_isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [inputKey, setInputKey] = useState(0);
 
   const [phase, setPhase] = useState<Phase>("idle");
@@ -199,7 +199,11 @@ export function EvaluationPage() {
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
           <EvaluationSidebar activeMethod={activeMethod} />
           {phase === "result" && result ? (
-            <EvaluationResultCard />
+            <EvaluationResultCard
+              error={error}
+              isSubmitting={isSubmitting}
+              response={result}
+            />
           ) : (
             <EvaluationForm
               error={error}
