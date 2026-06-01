@@ -13,7 +13,7 @@ model = MusiqInference()
 
 @broker.subscriber(RabbitQueue(settings.rabbitmq_processing_queue, durable=True))
 async def handle(msg: ProcessingQueueItem):
-    logger.success(f"Got a message from processing queue: {msg}!")
+    logger.debug(f"Got a message from processing queue: {msg}!")
 
     score = model.evaluate(msg.image_path)
     logger.success(f"Image: {msg.image_path}\n{score=}")
