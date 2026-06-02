@@ -37,7 +37,7 @@ export function getMethodApiId(methodId: (typeof methods)[number]['id']) {
 }
 
 export const notes = [
-  'Сейчас доступны только методы RR и NR.',
-  'Выбор мониторов в этой версии не используется.',
+  'Оценка качества моделью MUSIQ.',
+  'Отображение механизма Attention.',
   `Максимальный размер изображения: ${MAX_FILE_SIZE / (1024 * 1024)} МБ.`,
 ] as const

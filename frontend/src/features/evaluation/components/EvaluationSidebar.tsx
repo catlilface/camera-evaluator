@@ -1,12 +1,6 @@
 import { CheckCircle2 } from "lucide-react";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
 import { notes } from "@/features/evaluation/constants";
 
 export function EvaluationSidebar() {
@@ -14,10 +8,6 @@ export function EvaluationSidebar() {
     <Card className="border-white/70 bg-white/85">
       <CardHeader>
         <CardTitle>Что доступно сейчас</CardTitle>
-        <CardDescription>
-          Текущая версия страницы содержит только необходимое для демонстрации
-          формы.
-        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {notes.map((note) => (

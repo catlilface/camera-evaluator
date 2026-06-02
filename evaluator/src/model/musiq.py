@@ -11,6 +11,8 @@ import torch
 from loguru import logger
 from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 
+from src.settings import settings
+
 PathLike = Union[str, os.PathLike]
 
 
@@ -46,7 +48,9 @@ class MusiqInference:
         self._device = torch.device(device)
 
         if device == "cuda":
-            torch.cuda.set_per_process_memory_fraction(0.8, device=self._device.index)
+            torch.cuda.set_per_process_memory_fraction(
+                settings.gpu_memory_utilization, device=self._device.index
+            )
 
         self.attn_img_dir = pathlib.Path(attn_img_dir)
         self.attn_img_dir.mkdir(parents=True, exist_ok=True)
