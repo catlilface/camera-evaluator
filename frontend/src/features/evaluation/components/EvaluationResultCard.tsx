@@ -16,23 +16,23 @@ type EvaluationResultCardProps = {
 
 function getScoreColor(score: number): string {
   if (score >= 75) return "text-emerald-600";
-  if (score >= 50) return "text-yellow-600";
-  if (score >= 25) return "text-orange-600";
+  if (score >= 60) return "text-yellow-600";
+  if (score >= 40) return "text-orange-600";
   return "text-red-600";
 }
 
 function getScoreBgColor(score: number): string {
   if (score >= 75) return "bg-emerald-500";
-  if (score >= 50) return "bg-yellow-500";
-  if (score >= 25) return "bg-orange-500";
+  if (score >= 60) return "bg-yellow-500";
+  if (score >= 40) return "bg-orange-500";
   return "bg-red-500";
 }
 
 function getScoreLabel(score: number): string {
-  if (score >= 85) return "Великолепное качество";
-  if (score >= 70) return "Хорошее качество";
-  if (score >= 50) return "Среднее качество";
-  if (score >= 30) return "Ниже среднего";
+  if (score >= 75) return "Великолепное качество";
+  if (score >= 60) return "Хорошее качество";
+  if (score >= 40) return "Среднее качество";
+  if (score >= 25) return "Ниже среднего";
   return "Низкое качество";
 }
 

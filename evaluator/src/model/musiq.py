@@ -36,7 +36,7 @@ class MusiqInference:
 
     def __init__(
         self,
-        model_name: str = "koniq",
+        model_name: str = "spaq",
         device: str | None = None,
         warmup: bool = True,
         attn_img_dir: PathLike = "musiq_attention_images",
@@ -48,9 +48,7 @@ class MusiqInference:
         self._device = torch.device(device)
 
         if device == "cuda":
-            torch.cuda.set_per_process_memory_fraction(
-                settings.gpu_memory_utilization, device=self._device.index
-            )
+            torch.cuda.set_per_process_memory_fraction(0.7, device=self._device.index)
 
         self.attn_img_dir = pathlib.Path(attn_img_dir)
         self.attn_img_dir.mkdir(parents=True, exist_ok=True)
@@ -326,17 +324,22 @@ class MusiqInference:
         return img
 
     def _resize_if_needed(
-        self, image: Image.Image, max_width: int = 1024
+        self, image: Image.Image, shorter_side: int = 512
     ) -> Image.Image:
-        if image.width > max_width:
-            ratio = max_width / image.width
-            new_height = int(image.height * ratio)
-            resampling = getattr(Image, "Resampling", Image).LANCZOS
-            logger.debug(
-                f"Resizing image from {image.width}x{image.height} to {max_width}x{new_height}"
-            )
-            image = image.resize((max_width, new_height), resampling)
-        return image
+        width, height = image.size
+        min_side = min(width, height)
+
+        if min_side == shorter_side:
+            return image
+
+        scale = shorter_side / min_side
+        new_width = int(width * scale)
+        new_height = int(height * scale)
+
+        logger.success(f"Resized image to new dimensions: {new_width=}, {new_height=}")
+
+        resampling = getattr(Image, "Resampling", Image).BILINEAR
+        return image.resize((new_width, new_height), resampling)
 
     def _ndarray_to_pil(self, array: np.ndarray) -> Image.Image:
         array = np.asarray(array)
