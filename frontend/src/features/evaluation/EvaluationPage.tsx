@@ -129,7 +129,7 @@ export function EvaluationPage() {
     setPhase("loading");
     setSubmissionError("");
 
-    const channelId = crypto.randomUUID();
+    const channelId = window.crypto.randomUUID();
     const capturedImageUrl = previewUrl;
     const ws = new WebSocket(buildWsUrl(channelId));
     let received = false;
