@@ -53,6 +53,11 @@ services:
     volumes:
       - image_data:/app/.photos/
       - torch_hub:/root/.cache/torch/hub/
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
 
 volumes:
   rabbitmq_data:
