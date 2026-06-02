@@ -321,12 +321,16 @@ class MusiqInference:
         img = ImageOps.exif_transpose(img).convert("RGB")
         return img
 
-    def _resize_if_needed(self, image: Image.Image, max_width: int = 2048) -> Image.Image:
+    def _resize_if_needed(
+        self, image: Image.Image, max_width: int = 1024
+    ) -> Image.Image:
         if image.width > max_width:
             ratio = max_width / image.width
             new_height = int(image.height * ratio)
             resampling = getattr(Image, "Resampling", Image).LANCZOS
-            logger.debug(f"Resizing image from {image.width}x{image.height} to {max_width}x{new_height}")
+            logger.debug(
+                f"Resizing image from {image.width}x{image.height} to {max_width}x{new_height}"
+            )
             image = image.resize((max_width, new_height), resampling)
         return image
 
