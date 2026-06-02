@@ -8,6 +8,7 @@ from uuid import uuid4
 import numpy as np
 import pyiqa
 import torch
+from loguru import logger
 from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 
 PathLike = Union[str, os.PathLike]
@@ -43,6 +44,9 @@ class MusiqInference:
         if device is None:
             device = "cuda" if torch.cuda.is_available() else "cpu"
         self._device = torch.device(device)
+
+        if device == "cuda":
+            torch.cuda.set_per_process_memory_fraction(0.8, device=self._device.index)
 
         self.attn_img_dir = pathlib.Path(attn_img_dir)
         self.attn_img_dir.mkdir(parents=True, exist_ok=True)
@@ -289,6 +293,7 @@ class MusiqInference:
     ) -> Tuple[torch.Tensor, Image.Image]:
         if isinstance(image, (str, os.PathLike)):
             pil = self._load_image(str(image))
+            pil = self._resize_if_needed(pil)
             return self._pil_to_tensor(pil), pil
 
         if isinstance(image, (bytes, bytearray)):
@@ -296,14 +301,17 @@ class MusiqInference:
 
             pil = Image.open(io.BytesIO(image))
             pil = ImageOps.exif_transpose(pil).convert("RGB")
+            pil = self._resize_if_needed(pil)
             return self._pil_to_tensor(pil), pil
 
         if isinstance(image, Image.Image):
             pil = ImageOps.exif_transpose(image).convert("RGB")
+            pil = self._resize_if_needed(pil)
             return self._pil_to_tensor(pil), pil
 
         if isinstance(image, np.ndarray):
             pil = self._ndarray_to_pil(image)
+            pil = self._resize_if_needed(pil)
             return self._pil_to_tensor(pil), pil
 
         raise TypeError(f"Unsupported image type: {type(image)!r}")
@@ -312,6 +320,15 @@ class MusiqInference:
         img = Image.open(path)
         img = ImageOps.exif_transpose(img).convert("RGB")
         return img
+
+    def _resize_if_needed(self, image: Image.Image, max_width: int = 2048) -> Image.Image:
+        if image.width > max_width:
+            ratio = max_width / image.width
+            new_height = int(image.height * ratio)
+            resampling = getattr(Image, "Resampling", Image).LANCZOS
+            logger.debug(f"Resizing image from {image.width}x{image.height} to {max_width}x{new_height}")
+            image = image.resize((max_width, new_height), resampling)
+        return image
 
     def _ndarray_to_pil(self, array: np.ndarray) -> Image.Image:
         array = np.asarray(array)

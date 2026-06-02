@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     rabbitmq_password: str = "guest"
     rabbitmq_processing_queue: str = "processing_queue"
     rabbitmq_done_queue: str = "done_queue"
+    gpu_memory_utilization: float = 0.1
 
     @property
     def rabbitmq_url(self) -> str:

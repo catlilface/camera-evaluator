@@ -60,7 +60,7 @@ export function EvaluationResultCard({ result }: EvaluationResultCardProps) {
               <img
                 src={result.attentionImageUrl}
                 alt="Карта внимания модели"
-                className="absolute inset-0 h-full w-full object-cover"
+                className="inset-0 h-full w-full object-cover"
               />
             </div>
           </div>
