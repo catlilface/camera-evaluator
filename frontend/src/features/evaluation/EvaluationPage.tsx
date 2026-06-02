@@ -205,7 +205,7 @@ export function EvaluationPage() {
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
           <EvaluationSidebar />
           {phase === "result" && result ? (
-            <EvaluationResultCard result={result} />
+            <EvaluationResultCard result={result} onBack={handleReset} />
           ) : (
             <EvaluationForm
               error={error}

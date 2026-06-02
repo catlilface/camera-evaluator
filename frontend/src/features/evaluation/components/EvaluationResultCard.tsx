@@ -1,4 +1,4 @@
-import { ExternalLink, GitBranch, FileText, Brain } from "lucide-react";
+import { ExternalLink, GitBranch, FileText, Brain, ArrowLeft } from "lucide-react";
 
 import { Badge } from "@/components/ui/Badge";
 import {
@@ -12,6 +12,7 @@ import type { EvaluationResult } from "@/features/evaluation/types";
 
 type EvaluationResultCardProps = {
   result: EvaluationResult;
+  onBack: () => void;
 };
 
 function getScoreColor(score: number): string {
@@ -36,7 +37,7 @@ function getScoreLabel(score: number): string {
   return "Низкое качество";
 }
 
-export function EvaluationResultCard({ result }: EvaluationResultCardProps) {
+export function EvaluationResultCard({ result, onBack }: EvaluationResultCardProps) {
   const score = result.score ?? 0;
   const scoreColor = getScoreColor(score);
   const scoreBgColor = getScoreBgColor(score);
@@ -45,10 +46,21 @@ export function EvaluationResultCard({ result }: EvaluationResultCardProps) {
   return (
     <Card className="border-white/70 bg-white/90">
       <CardHeader>
-        <CardTitle>Результат оценки</CardTitle>
-        <CardDescription>
-          Оценка качества изображения методом MUSIQ
-        </CardDescription>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onBack}
+            className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Назад
+          </button>
+          <div>
+            <CardTitle>Результат оценки</CardTitle>
+            <CardDescription>
+              Оценка качества изображения методом MUSIQ
+            </CardDescription>
+          </div>
+        </div>
       </CardHeader>
       <CardContent className="space-y-6">
         {result.attentionImageUrl && (
