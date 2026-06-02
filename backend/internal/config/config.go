@@ -18,6 +18,7 @@ type Service struct {
 	Host            string        `env:"BACKEND_HOST,default=0.0.0.0"`
 	MainPort        string        `env:"BACKEND_EXTERNAL_PORT,default=8080"`
 	PhotosDir       string        `env:"PHOTOS_DIR"`
+	MaxFileSize     int64         `env:"MAX_FILE_SIZE,default=52428800"`
 	ReadTimeout     time.Duration `env:"READ_TIMEOUT_IN_SEC,default=10s"`
 	WriteTimeout    time.Duration `env:"WRITE_TIMEOUT_IN_SEC,default=10s"`
 	IdleTimeout     time.Duration `env:"IDLE_TIMEOUT_IN_SEC,default=15s"`

@@ -4,7 +4,6 @@ import {
   Button,
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui";
@@ -12,7 +11,6 @@ import {
   FileSummaryCard,
   ImagePreviewCard,
   ImageUploadField,
-  MethodSelector,
 } from "@/features/evaluation/components";
 import {
   type EvaluateResponse,
@@ -41,10 +39,8 @@ export function EvaluationForm({
   isLoading,
   previewUrl,
   selectedFile,
-  selectedMethod,
   submissionError,
   onFileChange,
-  onMethodChange,
   onReset,
   onSubmit,
 }: EvaluationFormProps) {
@@ -52,15 +48,15 @@ export function EvaluationForm({
     <Card className="border-white/70 bg-white/90">
       <CardHeader>
         <CardTitle>Форма оценки системы</CardTitle>
-        <CardDescription>
+        {/*<CardDescription>
           Выберите метод и загрузите изображение для дальнейшей обработки.
-        </CardDescription>
+        </CardDescription>*/}
       </CardHeader>
       <CardContent className="space-y-6">
-        <MethodSelector
+        {/*<MethodSelector
           selectedMethod={selectedMethod}
           onSelect={onMethodChange}
-        />
+        />*/}
 
         <ImageUploadField
           error={error}

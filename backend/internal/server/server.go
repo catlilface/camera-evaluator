@@ -22,6 +22,7 @@ func New(cfg *config.Service) *Server {
 	gin.SetMode(gin.DebugMode)
 
 	mainRouter := gin.New()
+	mainRouter.MaxMultipartMemory = cfg.MaxFileSize
 
 	mainRouter.Use(middleware.RequestIDMiddleware())
 	mainRouter.Use(gin.Recovery())

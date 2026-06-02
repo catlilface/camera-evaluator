@@ -63,7 +63,7 @@ func (a *App) Run(ctx context.Context) error {
 	photoService := photoSrv.NewPhotoService(rabbitPublisher, a.cfg.Service.PhotosDir)
 
 	//handlers
-	photoConnector := photoHandler.NewPhotoHandler(photoService)
+	photoConnector := photoHandler.NewPhotoHandler(photoService, a.cfg.Service.MaxFileSize)
 	wsConnector := ws.NewWSHandler(wsManager)
 
 	//http server

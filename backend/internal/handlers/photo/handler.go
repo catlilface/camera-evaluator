@@ -2,6 +2,7 @@ package photo
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"photo-upload-service/internal/models"
 	api "photo-upload-service/internal/pkg/api/photo"
@@ -18,11 +19,13 @@ type photoService interface {
 
 type UploadHandler struct {
 	photoService photoService
+	maxFileSize  int64
 }
 
-func NewPhotoHandler(photoService *photo.Service) *UploadHandler {
+func NewPhotoHandler(photoService *photo.Service, maxFileSize int64) *UploadHandler {
 	return &UploadHandler{
 		photoService: photoService,
+		maxFileSize:  maxFileSize,
 	}
 }
 
@@ -33,6 +36,11 @@ func (h *UploadHandler) Evaluate(c *gin.Context) {
 	fileHeader, err := c.FormFile("image")
 	if err != nil {
 		httpUtils.AbortWithStatus(c, http.StatusBadRequest, err)
+		return
+	}
+
+	if fileHeader.Size > h.maxFileSize {
+		httpUtils.AbortWithStatus(c, http.StatusRequestEntityTooLarge, fmt.Errorf("file size exceeds maximum allowed size of %d bytes", h.maxFileSize))
 		return
 	}
 

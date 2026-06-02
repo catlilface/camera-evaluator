@@ -1,10 +1,10 @@
-import { FileImage, Info } from 'lucide-react'
+import { FileImage } from "lucide-react";
 
-import { formatFileSize } from '@/features/evaluation/utils'
+import { formatFileSize } from "@/features/evaluation/utils";
 
 type FileSummaryCardProps = {
-  file: File | null
-}
+  file: File | null;
+};
 
 export function FileSummaryCard({ file }: FileSummaryCardProps) {
   return (
@@ -20,12 +20,12 @@ export function FileSummaryCard({ file }: FileSummaryCardProps) {
             <span className="font-medium text-slate-800">Имя:</span> {file.name}
           </p>
           <p>
-            <span className="font-medium text-slate-800">Размер:</span>{' '}
+            <span className="font-medium text-slate-800">Размер:</span>{" "}
             {formatFileSize(file.size)}
           </p>
           <p>
-            <span className="font-medium text-slate-800">Тип:</span>{' '}
-            {file.type || 'Не определён'}
+            <span className="font-medium text-slate-800">Тип:</span>{" "}
+            {file.type || "Не определён"}
           </p>
         </div>
       ) : (
@@ -34,7 +34,7 @@ export function FileSummaryCard({ file }: FileSummaryCardProps) {
         </p>
       )}
 
-      <div className="mt-auto rounded-2xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+      {/*<div className="mt-auto rounded-2xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
         <div className="flex gap-2">
           <Info className="mt-0.5 h-4 w-4 shrink-0" />
           <span>
@@ -42,7 +42,7 @@ export function FileSummaryCard({ file }: FileSummaryCardProps) {
             эталонного изображения.
           </span>
         </div>
-      </div>
+      </div>*/}
     </div>
-  )
+  );
 }
