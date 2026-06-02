@@ -16,6 +16,7 @@ type ProcessPhotoData struct {
 }
 
 type EvaluationResponseMessage struct {
-	ID    string  `json:"id"`
-	Score float64 `json:"score"`
+	ID            string  `json:"id"`
+	Score         float64 `json:"score"`
+	AttentionPath string  `json:"attn_img"`
 }

@@ -69,6 +69,7 @@ func (a *App) Run(ctx context.Context) error {
 	//http server
 	a.srv = server.New(
 		&a.cfg.Service,
+		a.cfg.Service.PhotosDir,
 	)
 
 	api.RegisterHandlers(a.srv.GetMainRouter(), photoConnector)

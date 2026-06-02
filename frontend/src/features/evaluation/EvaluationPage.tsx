@@ -18,6 +18,7 @@ import {
   buildWsUrl,
   revokePreviewUrl,
   validateImageFile,
+  buildAttentionImageUrl,
 } from "@/features/evaluation/utils";
 
 type Phase = "idle" | "loading" | "result" | "error";
@@ -164,8 +165,12 @@ export function EvaluationPage() {
       received = true;
       try {
         const msg = JSON.parse(event.data) as WsResultMessage;
+        const attentionImageUrl = msg.attn_img
+          ? buildAttentionImageUrl(msg.attn_img)
+          : undefined;
         setResult({
           imageUrl: capturedImageUrl,
+          attentionImageUrl,
           score: typeof msg.score === "number" ? msg.score : null,
           status: msg.status ?? "ok",
         });
@@ -197,7 +202,7 @@ export function EvaluationPage() {
         <EvaluationHeader />
 
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-          <EvaluationSidebar activeMethod={activeMethod} />
+          <EvaluationSidebar />
           {phase === "result" && result ? (
             <EvaluationResultCard result={result} />
           ) : (

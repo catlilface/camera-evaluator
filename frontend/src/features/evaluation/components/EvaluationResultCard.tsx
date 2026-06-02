@@ -51,13 +51,20 @@ export function EvaluationResultCard({ result }: EvaluationResultCardProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="relative flex min-h-[220px] items-center justify-center overflow-hidden rounded-[24px] border border-slate-200 bg-slate-50 md:min-h-[260px]">
-          <img
-            src={result.imageUrl}
-            alt="Оцененное изображение"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-        </div>
+        {result.attentionImageUrl && (
+          <div className="space-y-2">
+            <h4 className="text-sm font-semibold text-slate-900">
+              Карта Attention механизма
+            </h4>
+            <div className="relative flex min-h-[220px] items-center justify-center overflow-hidden rounded-[24px] border border-slate-200 bg-slate-50 md:min-h-[260px]">
+              <img
+                src={result.attentionImageUrl}
+                alt="Карта внимания модели"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            </div>
+          </div>
+        )}
 
         <div className="space-y-3">
           <div className="flex items-baseline justify-between">

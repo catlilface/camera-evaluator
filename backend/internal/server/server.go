@@ -18,7 +18,7 @@ type Server struct {
 	mainPort    string
 }
 
-func New(cfg *config.Service) *Server {
+func New(cfg *config.Service, photosDir string) *Server {
 	gin.SetMode(gin.DebugMode)
 
 	mainRouter := gin.New()
@@ -31,6 +31,8 @@ func New(cfg *config.Service) *Server {
 		log.Println("Healthcheck request")
 		c.Status(http.StatusOK)
 	})
+
+	mainRouter.StaticFS("/api/v1/photos", http.Dir(photosDir))
 
 	return &Server{
 		mainRouter:  mainRouter,

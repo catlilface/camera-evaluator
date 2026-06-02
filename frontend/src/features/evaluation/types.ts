@@ -12,10 +12,12 @@ export type WsResultMessage = {
   id: string;
   score?: number;
   status?: string;
+  attn_img?: string;
 };
 
 export type EvaluationResult = {
   imageUrl: string;
+  attentionImageUrl?: string;
   score: number | null;
   status: string;
 };

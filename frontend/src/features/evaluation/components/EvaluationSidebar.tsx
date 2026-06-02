@@ -1,16 +1,15 @@
-import { CheckCircle2 } from 'lucide-react'
+import { CheckCircle2 } from "lucide-react";
 
-import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
-import { notes } from '@/features/evaluation/constants'
-import { type EvaluationMethod } from '@/features/evaluation/types'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui";
+import { notes } from "@/features/evaluation/constants";
 
-type EvaluationSidebarProps = {
-  activeMethod: EvaluationMethod
-}
-
-export function EvaluationSidebar({
-  activeMethod,
-}: EvaluationSidebarProps) {
+export function EvaluationSidebar() {
   return (
     <Card className="border-white/70 bg-white/85">
       <CardHeader>
@@ -31,7 +30,7 @@ export function EvaluationSidebar({
           </div>
         ))}
 
-        <div className="rounded-3xl bg-slate-950 p-5 text-white">
+        {/*<div className="rounded-3xl bg-slate-950 p-5 text-white">
           <p className="text-sm uppercase tracking-[0.22em] text-sky-200">
             Активный метод
           </p>
@@ -47,8 +46,8 @@ export function EvaluationSidebar({
               dangerouslySetInnerHTML={{ __html: activeMethod.subtitle }}
             />
           </div>
-        </div>
+        </div>*/}
       </CardContent>
     </Card>
-  )
+  );
 }

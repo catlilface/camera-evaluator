@@ -8,7 +8,7 @@ from src.settings import settings
 
 broker = RabbitBroker(settings.rabbitmq_url)
 app = FastStream(broker)
-model = MusiqInference()
+model = MusiqInference(attn_img_dir="/app/.photos")
 
 
 @broker.subscriber(RabbitQueue(settings.rabbitmq_processing_queue, durable=True))
@@ -18,4 +18,11 @@ async def handle(msg: ProcessingQueueItem):
     score = model.evaluate(msg.image_path)
     logger.success(f"Image: {msg.image_path}\n{score=}")
 
-    await broker.publish({"id": msg.id, "score": score}, settings.rabbitmq_done_queue)
+    await broker.publish(
+        {
+            "id": msg.id,
+            "score": score.score,
+            "attn_img": score.attention_image_path,
+        },
+        settings.rabbitmq_done_queue,
+    )
