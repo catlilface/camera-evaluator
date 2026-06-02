@@ -243,15 +243,15 @@ class MusiqInference:
 
         resampling = getattr(Image, "Resampling", Image).BILINEAR
 
-        mask = Image.fromarray((attention * 255).astype(np.uint8), mode="L")
+        mask = Image.fromarray((attention * 1024).astype(np.uint8), mode="L")
         mask = mask.resize(pil_image.size, resampling)
 
         blur_radius = max(1, int(min(pil_image.size) * 0.02))
         mask = mask.filter(ImageFilter.GaussianBlur(radius=blur_radius))
-        mask = ImageEnhance.Contrast(mask).enhance(1.8)
+        mask = ImageEnhance.Contrast(mask).enhance(2)
 
         # Dark image where attention is low, keep original where attention is high.
-        dark_image = ImageEnhance.Brightness(pil_image).enhance(0.25)
+        dark_image = ImageEnhance.Brightness(pil_image).enhance(0.05)
         attention_image = Image.composite(pil_image, dark_image, mask)
 
         return attention_image
