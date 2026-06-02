@@ -19,6 +19,7 @@ import {
   revokePreviewUrl,
   validateImageFile,
   buildAttentionImageUrl,
+  uuidv4,
 } from "@/features/evaluation/utils";
 
 type Phase = "idle" | "loading" | "result" | "error";
@@ -129,7 +130,7 @@ export function EvaluationPage() {
     setPhase("loading");
     setSubmissionError("");
 
-    const channelId = window.crypto.randomUUID();
+    const channelId = uuidv4();
     const capturedImageUrl = previewUrl;
     const ws = new WebSocket(buildWsUrl(channelId));
     let received = false;
