@@ -14,21 +14,6 @@ services:
       start_period: 3s
     env_file: .env
 
-  postgres:
-    image: postgres:18.3-alpine
-    ports:
-      - "${POSTGRES_PORT}:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql
-    env_file: .env
-    healthcheck:
-      test:
-        ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 3s
-
   frontend:
     build:
       context: ./frontend
@@ -53,8 +38,6 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
-      postgres:
-        condition: service_healthy
     volumes:
       - image_data:/app/.photos/
 
@@ -73,8 +56,6 @@ services:
 
 volumes:
   rabbitmq_data:
-    driver: local
-  postgres_data:
     driver: local
   image_data:
     driver: local
