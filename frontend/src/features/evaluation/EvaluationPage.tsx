@@ -223,6 +223,18 @@ export function EvaluationPage() {
             />
           )}
         </div>
+
+        <footer className="mt-8 flex items-center justify-between text-sm text-slate-500">
+          <a
+            href="https://github.com/catlilface/camera-evaluator"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors text-slate-800 hover:text-black underline"
+          >
+            GitHub
+          </a>
+          <span>2026, Московский Политех</span>
+        </footer>
       </section>
     </main>
   );
